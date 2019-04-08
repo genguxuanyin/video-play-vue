@@ -138,6 +138,34 @@ const MapControls = function ( object, domElement ) {
 		var lastQuaternion = new THREE.Quaternion();
 
 		return function update() {
+			if ( scope.object.isOrthographicCamera && scope.screenWidth && scope.screenHeight) {
+				var position = scope.object.position;
+				var initPosY = (scope.screenHeight * (scope.object.zoom - 1))/2/scope.object.zoom;
+				var initPosX = (scope.screenWidth * scope.object.zoom - window.innerWidth)/2/scope.object.zoom;
+				
+				console.log(initPosX,position.x,scope.screenWidth,window.innerWidth,scope.object.zoom)
+				if(scope.object.zoom < 1){
+					scope.object.zoom = 1;
+					scope.object.updateProjectionMatrix();
+				}
+				if(position.y > initPosY){
+					position.set(position.x,initPosY, 100);
+					scope.target.set(position.x,initPosY, 0);
+				}
+				if(position.y < -initPosY){
+					position.set(position.x,-initPosY, 100);
+					scope.target.set(position.x,-initPosY, 0);
+				}
+
+				if(position.x > initPosX){
+					position.set(initPosX,position.y, 100);
+					scope.target.set(initPosX,position.y, 0);
+				}
+				if(position.x < -initPosX){
+					position.set(-initPosX,position.y, 100);
+					scope.target.set(-initPosX,position.y, 0);
+				}
+			}
 
 			var position = scope.object.position;
 
@@ -928,7 +956,7 @@ const MapControls = function ( object, domElement ) {
 
 				if ( scope.enableZoom === false && scope.enableRotate === false ) return;
 
-				handleTouchStartRotate( event );
+				// handleTouchStartRotate( event );
 				handleTouchStartDolly( event );
 
 				state = STATE.DOLLY_ROTATE;
@@ -974,7 +1002,7 @@ const MapControls = function ( object, domElement ) {
 				if ( scope.enableZoom === false && scope.enableRotate === false ) return;
 				if ( ( state & STATE.DOLLY_ROTATE ) === 0 ) return; // is this needed?
 
-				handleTouchMoveRotate( event );
+				// handleTouchMoveRotate( event );
 				handleTouchMoveDolly( event );
 
 				scope.update();

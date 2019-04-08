@@ -19,24 +19,38 @@
         preload="auto"
       ></video>
     </div>
-    <screen ref="screen"></screen>
+    <screen ref="screen" :screenHeight='screenHeight' :screenWidth='screenWidth'></screen>
+    <Control></Control>
   </div>
 </template>
 
 <script>
 import screen from "../components/three/screen";
+import Control from "../components/Control";
 export default {
   name: "Home",
   data() {
     return {
+      screenWidth:0,
+      screenHeight:0,
       uninit: true
     };
   },
   components: {
-    screen
+    screen,
+    Control
   },
-  methods:{
-    init(){
+  methods: {
+    init() {
+      var video = document.getElementById("video");
+      if(video.videoWidth / window.innerWidth > video.videoHeight / window.innerHeight){
+        this.screenHeight = window.innerHeight;
+        this.screenWidth = window.innerHeight * video.videoWidth / video.videoHeight;
+      } else {
+        this.screenWidth = window.innerWidth;
+        this.screenHeight = window.innerWidth * video.videoHeight / video.videoWidth;
+      }
+      console.log(this.screenWidth / this.screenHeight,video.videoWidth / video.videoHeight)
       this.uninit = false;
       this.$refs.screen.init();
     }

@@ -90,7 +90,7 @@ export default {
         return {
           x: 0,
           y: 0,
-          z: 1000
+          z: 100
         };
       }
     },
@@ -401,11 +401,11 @@ export default {
         if (this.controls) return;
         this.controls = new MapControls(this.camera, this.renderer.domElement);
         this.controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
-        this.controls.dampingFactor = 0.25;
-        this.controls.screenSpacePanning = false;
+        this.controls.screenSpacePanning = true;
+        this.controls.enableRotate = false;
+        this.controls.panSpeed = 0.4;
         this.controls.minDistance = 100;
         this.controls.maxDistance = 500;
-        this.controls.maxPolarAngle = Math.PI / 2;
 
         // this.controls.addEventListener("change", this.render.bind(this));
       } else {
@@ -428,6 +428,7 @@ export default {
     render() {
       this.renderer.render(this.scene, this.camera);
       this.stats && this.statsEnabled && this.stats.update();
+      this.controls && this.controllable && this.controls.update();
     }
   }
 };

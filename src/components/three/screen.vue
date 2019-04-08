@@ -4,17 +4,25 @@ import * as THREE from "three";
 
 export default {
   name: "screen",
+  data(){
+    return {
+      movieScreen:null
+    }
+  },
   mixins: [mixin],
   props: {
     screenWidth: {
-      type: Number
+      type: Number,
+      default:2560
     },
     screenHeight: {
-      type: Number
+      type: Number,
+      default:375
     }
   },
   methods: {
     init() {
+      this.movieScreen && this.wrapper.remove(this.movieScreen);
       this.uninit = false;
       var video = document.getElementById("video");
       // enableInlineVideo(video);
@@ -27,13 +35,26 @@ export default {
       });
       // the geometry on which the movie will be displayed;
       // movie image will be scaled to fit these dimensions.
-      var movieGeometry = new THREE.PlaneGeometry(2560, 442, 4, 4);
+      var movieGeometry = new THREE.PlaneGeometry(this.screenWidth, this.screenHeight, 1, 1);
       var movieScreen = new THREE.Mesh(movieGeometry, movieMaterial);
       //   movieScreen.position.set(0, 50, 0);
       this.wrapper.add(movieScreen);
-    },
-    initClick() {
+    }
+  },
+  watch:{
+    screenHeight(){
       this.init();
+      if(this.controls && this.controllable){
+        this.controls.screenWidth = this.screenWidth;
+        this.controls.screenHeight = this.screenHeight;
+      }
+    },
+    screenWidth(){
+      this.init();
+      if(this.controls && this.controllable){
+        this.controls.screenWidth = this.screenWidth;
+        this.controls.screenHeight = this.screenHeight;
+      }
     }
   }
 };
